@@ -94,7 +94,6 @@ define([
 
       initAvailableStatusesMatrix();
       initListeners();
-      initWatchers();
 
       return $q.all([
         loadLoggedInContactId(),
@@ -466,7 +465,8 @@ define([
       listeners.push(
         $rootScope.$on('LeaveRequestPopup::requestObjectUpdated', setInitialAttributes),
         $rootScope.$on('LeaveRequestPopup::handleError', function (__, errors) { handleError(errors); }),
-        $rootScope.$on('LeaveRequestPopup::childComponent::register', function () { childComponentsCount++; })
+        $rootScope.$on('LeaveRequestPopup::childComponent::register', function () { childComponentsCount++; }),
+        $rootScope.$on('LeaveRequestPopup::loadAbsenceTypes', reloadAbsenceTypes)
       );
     }
 
@@ -614,21 +614,6 @@ define([
     }
 
     /**
-     * Initialises watchers
-     */
-    function initWatchers () {
-      $rootScope.$watch(function () {
-        return vm.period;
-      }, function () {
-        _loadAbsenceTypes()
-          .then(function () {
-            setInitialAbsenceTypes();
-            $timeout(function () { $rootScope.$emit('LeaveRequestPopup::updateBalance'); }, 0);
-          });
-      });
-    }
-
-    /**
      * Loads all absence periods
      */
     function loadAbsencePeriods () {
@@ -748,6 +733,19 @@ define([
           $rootScope.$emit('LeaveRequestPopup::updateBalance');
         }
       });
+    }
+
+    /**
+     * Reloads the absence Types and broadcasts an event to update the balance
+     *
+     * @return {Promise}
+     */
+    function reloadAbsenceTypes () {
+      return _loadAbsenceTypes()
+        .then(function () {
+          setInitialAbsenceTypes();
+          $rootScope.$emit('LeaveRequestPopup::updateBalance');
+        });
     }
 
     /**
