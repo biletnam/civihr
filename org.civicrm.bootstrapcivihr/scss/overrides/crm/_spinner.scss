@@ -5,7 +5,9 @@
 .crm-container {
   .dataTables_processing,
   .blockUI.blockOverlay {
-    @include spinner(1s);
+    @include spinner();
+    height: 32px !important;
     margin: 11% 50% !important;
+    width: 32px !important;
   }
 }
