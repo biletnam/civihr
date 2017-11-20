@@ -89,10 +89,6 @@ define([
           selectedAbsenceType = _.assign(absenceTypeData.all().values[0], {remainder: 0});
 
           compileComponent();
-
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
-
           controller.request.type_id = selectedAbsenceType.id;
         });
 
@@ -427,8 +423,7 @@ define([
             mode: 'create',
             selectedAbsenceType: selectedAbsenceType
           });
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
+          setTestDates(date2017);
           controller.request.type_id = params.selectedAbsenceType.id;
         });
 
@@ -575,9 +570,6 @@ define([
               request: leaveRequest
             });
 
-            $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-            $rootScope.$digest();
-
             controller.request.type_id = params.selectedAbsenceType.id;
           });
 
@@ -627,9 +619,6 @@ define([
                 selectedAbsenceType: selectedAbsenceType
               });
 
-              $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-              $rootScope.$digest();
-
               controller.request.type_id = selectedAbsenceType.id;
             });
 
@@ -655,9 +644,6 @@ define([
             selectedAbsenceType: selectedAbsenceType
           });
 
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
-
           controller.request.type_id = selectedAbsenceType.id;
         });
 
@@ -682,9 +668,6 @@ define([
             request: leaveRequest,
             selectedAbsenceType: selectedAbsenceType
           });
-
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
 
           controller.request.type_id = selectedAbsenceType.id;
         });
@@ -736,9 +719,6 @@ define([
               request: sicknessRequest,
               selectedAbsenceType: selectedAbsenceType
             });
-
-            $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-            $rootScope.$digest();
           });
 
           it('sets edit mode', function () {
@@ -760,9 +740,6 @@ define([
                 request: sicknessRequest,
                 selectedAbsenceType: selectedAbsenceType
               });
-
-              $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-              $rootScope.$digest();
             });
 
             it('shows multiple days', function () {
@@ -779,9 +756,6 @@ define([
                 request: sicknessRequest,
                 leaveType: 'sick'
               });
-
-              $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-              $rootScope.$digest();
             });
 
             it('shows single day', function () {
@@ -814,9 +788,6 @@ define([
             leaveType: 'toil',
             request: leaveRequest
           });
-
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
 
           controller.request.type_id = params.selectedAbsenceType.id;
         });
@@ -880,9 +851,6 @@ define([
               request: toilRequest
             });
 
-            $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-            $rootScope.$digest();
-
             absenceType = _.find(controller.absenceTypes, function (absenceType) {
               return absenceType.id === controller.request.type_id;
             });
@@ -919,8 +887,6 @@ define([
               role: 'manager'
             });
 
-            $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-            $rootScope.$digest();
             controller.request.type_id = params.selectedAbsenceType.id;
             setTestDates(date2016, date2016);
             controller.calculateToilExpiryDate();
@@ -961,9 +927,6 @@ define([
                   request: controller.request
                 });
 
-                $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-                $rootScope.$digest();
-
                 controller.uiOptions.expiryDate = oldExpiryDate;
 
                 controller.updateExpiryDate();
@@ -988,9 +951,6 @@ define([
             leaveType: 'toil',
             request: controller.request
           });
-
-          $rootScope.$broadcast('LeaveRequestPopup::ContactSelectionComplete');
-          $rootScope.$digest();
         });
 
         it('should set requestCanExpire to false', function () {

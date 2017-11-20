@@ -23,12 +23,13 @@ define([
 
   controllers.controller('RequestCtrl', RequestCtrl);
 
-  RequestCtrl.$inject = ['$log', '$q', '$rootScope', '$uibModalInstance', 'checkPermissions', 'api.optionGroup',
-    'dialog', 'pubSub', 'directiveOptions', 'Contact', 'Session', 'AbsencePeriod', 'AbsenceType', 'Entitlement',
-    'LeaveRequest', 'LeaveRequestInstance', 'shared-settings', 'SicknessRequestInstance', 'TOILRequestInstance'];
+  RequestCtrl.$inject = ['$log', '$q', '$rootScope', '$timeout', '$uibModalInstance', 'checkPermissions',
+    'api.optionGroup', 'dialog', 'pubSub', 'directiveOptions', 'Contact', 'Session', 'AbsencePeriod',
+    'AbsenceType', 'Entitlement', 'LeaveRequestInstance', 'shared-settings', 'SicknessRequestInstance',
+    'TOILRequestInstance'];
 
-  function RequestCtrl ($log, $q, $rootScope, $modalInstance, checkPermissions, OptionGroup, dialog, pubSub,
-    directiveOptions, Contact, Session, AbsencePeriod, AbsenceType, Entitlement, LeaveRequest,
+  function RequestCtrl ($log, $q, $rootScope, $timeout, $modalInstance, checkPermissions, OptionGroup, dialog,
+    pubSub, directiveOptions, Contact, Session, AbsencePeriod, AbsenceType, Entitlement,
     LeaveRequestInstance, sharedSettings, SicknessRequestInstance, TOILRequestInstance) {
     $log.debug('RequestCtrl');
 
@@ -93,6 +94,7 @@ define([
 
       initAvailableStatusesMatrix();
       initListeners();
+      initWatchers();
 
       return $q.all([
         loadLoggedInContactId(),
@@ -160,6 +162,9 @@ define([
 
       // check if the selected date period is in absence period
       canSubmit = canSubmit && !!vm.period.id;
+
+      // check if the absence types are present
+      canSubmit = canSubmit && !!vm.absenceTypes.length;
 
       return canSubmit && !vm.isMode('view');
     }
@@ -606,6 +611,21 @@ define([
      */
     function isRole (roleParam) {
       return role === roleParam;
+    }
+
+    /**
+     * Initialises watchers
+     */
+    function initWatchers () {
+      $rootScope.$watch(function () {
+        return vm.period;
+      }, function () {
+        _loadAbsenceTypes()
+          .then(function () {
+            setInitialAbsenceTypes();
+            $timeout(function () { $rootScope.$emit('LeaveRequestPopup::updateBalance'); }, 0);
+          });
+      });
     }
 
     /**
